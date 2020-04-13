@@ -1,17 +1,18 @@
 
 console.log( "Connected!" );
 
+require('dotenv').config();
 
-var express = require( "express" );
-var flash = require( "connect-flash" );
+var express  = require( "express" );
+var flash    = require( "connect-flash" );
 var passport = require( "passport" );
-var LocalStrategy = require( "passport-local" );
+var LocalStrategy  = require( "passport-local" );
 var methodOverride = require( "method-override" );
-var User = require( "./models/user" );
+var User     = require( "./models/user" );
 
 var campgroundRoutes = require( "./routes/campgrounds" );
-var commentRoutes = require( "./routes/comments" );
-var indexRoutes = require( "./routes/index" );
+var commentRoutes    = require( "./routes/comments" );
+var indexRoutes      = require( "./routes/index" );
 
 var app = express();
 var port = 3000;

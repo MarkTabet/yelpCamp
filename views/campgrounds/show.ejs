@@ -2,7 +2,6 @@
 <%- include("../partials/header") %>
 
 
-<div class="container">
     <div class="row">
         <div class="col-md-3">
             <p class="lead">Yelp Camp</p>
@@ -11,7 +10,7 @@
                 <li class="list-group-item">Category 2</li>
                 <li class="list-group-item">Category 3</li>
             </div>
-            <!-- map will go here -->
+            <div id="map"></div>
         </div>
         <div class="col-md-9">
             <div class="thumbnail">
@@ -62,7 +61,35 @@
             </div>
         </div>
     </div>
-</div>
-    
+
+    <!-- Google Maps -->
+    <script>
+        function initMap() {
+          var lat = <%= campground.lat %>;
+          var lng = <%= campground.lng %>;
+          var center = {lat: lat, lng: lng };
+          var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 8,
+              center: center,
+              scrollwheel: false
+          });
+          var contentString = `
+            <strong><%= campground.name %><br />
+            <%= campground.location %></strong>
+            <p><%= campground.description %></p>
+          `
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+          var marker = new google.maps.Marker({
+              position: center,
+              map: map
+          });
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+          });
+        }
+      </script>
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLAj3vExT6JHiJYgf5Tk1D9pOeb74joDU&callback=initMap"></script>
 
 <%- include("../partials/footer") %>
