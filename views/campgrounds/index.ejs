@@ -7,6 +7,14 @@
             <h1>Our Campgrounds</h1>
             <p>View our hand-picked campgrounds from around the world. Register to become a member and add your own campgrounds. You can also sign up for free email updates.</p>
             <p><a class="btn btn-primary btn-lg" href="/campgrounds/new" role="button">Add New Campground &raquo;</a></p>
+            <p>
+                <form action="/campgrounds" method="GET" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" name="search" placeholder="Search campgrounds..." id="" class="form-control">
+                        <input type="submit" value="Search" class="btn btn-default">
+                    </div>
+                </form>
+            </p>
         </div>
     </header>
         
