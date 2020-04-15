@@ -1,0 +1,37 @@
+
+<%- include("../partials/header") %>
+
+<!-- <h1 style="padding-bottom: 20px">User Profile</h1> -->
+<legend>User Profile</legend>
+
+<div class="row">
+    <div class="col-md-4">
+        <!-- <img src="https://cdn3.iconfinder.com/data/icons/yumminky-pc/100/yumminky-pc-43-512.png" style="width: 200px" alt=""> -->
+        <img src="<%= user.avatar %>" style="width: 200px" alt="user profile image">
+        <h1><%= user.username %></h1>
+        <p>Name: <%= user.firstName %> <%= user.lastName %></p>
+        <a href="mailto:<%= user.email %>">Email: <%= user.email %></a>
+        <p> </p>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio beatae, in quam debitis quibusdam pariatur odio esse repudiandae, magnam quidem laborum nam quaerat accusantium nisi illum iusto deserunt suscipit quisquam.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio beatae, in quam debitis quibusdam pariatur odio esse repudiandae, magnam quidem laborum nam quaerat accusantium nisi illum iusto deserunt suscipit quisquam.
+        </p>
+    </div>
+    <div class="col-md-8">
+            <h3 style="margin-top: 0"><%= user.username %>'s campgrounds</h3>
+
+        <% campgrounds.forEach( function( campground ){ %>
+            <div class="">
+                <img src="<%= campground.image %>" style="height: 200px">
+            </div>
+            <p>
+                <a href="/campgrounds/<%= campground.id %>"><%= campground.name %></a>
+            </p>
+        <% }); %>
+    </div>
+</div>
+
+
+<%- include("../partials/footer") %>

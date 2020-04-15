@@ -3,8 +3,18 @@
     var passportLocalMongoose = require( "passport-local-mongoose" );
      
     var UserSchema = new mongoose.Schema({
-        username: String,
-        password: String
+        username: { type: String, unique: true, required: true },
+        password: String,
+        avatar: { type: String, default: "https://cdn3.iconfinder.com/data/icons/yumminky-pc/100/yumminky-pc-43-512.png" },
+        firstName: String,
+        lastName: String,
+        email: { type: String, unique: true, required: true },
+        resetPasswordToken: String,
+        resetPasswordExpires: Date,
+        isAdmin: {
+            type: Boolean,
+            default: false
+        }
     });
 
     UserSchema.plugin( passportLocalMongoose );

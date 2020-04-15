@@ -1,0 +1,24 @@
+
+<%- include("partials/header") %>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<form action="/forgot" method="POST">
+            <legend>Forgot Password</legend>
+            <p>
+                If you have forgotten or lost your password, please enter below the email address you registered with on YelpCamp, and we'll send you an email containing a key to allow you to reset your password.
+            </p>
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input type="email" name="email" autofocus class="form-control">
+			</div>
+			<div class="form-group">
+				<input type="submit" class="btn btn-primary" value="Reset Password">
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<%- include( "partials/footer" ) %>
