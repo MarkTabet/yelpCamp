@@ -34,7 +34,6 @@ var upload = multer( { storage: storage, fileFilter: imageFilter} );
 // var cloudinary = require( 'cloudinary' ).v2;
 var cloudinary = require( 'cloudinary' );
 
-//   cloud_name: 'dawqfrtwe',
 cloudinary.config({ 
     cloud_name: 'mark2code',
     api_key: process.env.CLOUDINARY_API_KEY, 
@@ -88,6 +87,7 @@ router.post( "/", middleware.isLoggedIn, upload.single( "image" ), function( req
 
     cloudinary.v2.uploader.upload( req.file.path, function( err, result ){
         newCampground.image = result.secure_url;
+        newCampground.image_id = result.public_id;
         geocoder.geocode( req.body.campground.location, function( err, data ){
             if (err || !data.length) {
                 req.flash('error', 'Invalid address');
@@ -151,25 +151,39 @@ router.get( "/:id/edit", middleware.checkCampgroundOwnership, function( req, res
 
 // CAMPGROUND UPDATE route - Update a particular campground and redirect
 
-router.put( "/:id", middleware.checkCampgroundOwnership, function( req, res ){
-    geocoder.geocode( req.body.campground.location, function( err, data ){
-        if( err || !data.length ) {
-            req.flash( 'error', 'Invalid address' );
-          return res.redirect( 'back' );
-        }
-        req.body.campground.lat = data[0].latitude;
-        req.body.campground.lng = data[0].longitude;
-        req.body.campground.location = data[0].formattedAddress;
-        // find and update
-        Campground.findByIdAndUpdate( req.params.id, req.body.campground, function( err, updatedCampground ){
-            if( err ){
-                req.flash("error", err.message);
-                res.redirect("back");
-            } else {
-                req.flash("success","Successfully Updated!");
-                res.redirect( "/campgrounds/" + req.params.id );
+router.put( "/:id", middleware.checkCampgroundOwnership, upload.single( "image" ), function( req, res ){
+    Campground.findById( req.params.id, async function( err, foundCampground ){
+        if( err ){
+            req.flash("error", err.message);
+            res.redirect("back");
+        } else {
+            // if the user selected a new image for the campround it needs to be deleted
+            if( req.file ){
+                try {
+                    await cloudinary.v2.uploader.destroy( foundCampground.image_id );
+                    var result = await cloudinary.v2.uploader.upload( req.file.path );
+                    foundCampground.image = result.secure_url;
+                    foundCampground.image_id = result.public_id;
+                } catch( err ) {
+                    req.flash( "error", err.message );
+                    res.redirect( "back" );
+                }
             }
-        });
+            geocoder.geocode( req.body.campground.location, function( err, data ){
+                if (err || !data.length) {
+                    req.flash('error', 'Invalid address');
+                    return res.redirect('back');
+                }
+                foundCampground.lat = data[0].latitude;
+                foundCampground.lng = data[0].longitude;
+                foundCampground.location = data[0].formattedAddress;
+
+                foundCampground.save();
+        
+                req.flash("success","Successfully Updated!");
+                res.redirect( "/campgrounds/" + foundCampground._id );
+            });
+        }
     });
 });
 
@@ -177,20 +191,26 @@ router.put( "/:id", middleware.checkCampgroundOwnership, function( req, res ){
 // CAMPGROUND DESTROY route - delete a particular campground and redirect
 
 router.delete( "/:id", middleware.checkCampgroundOwnership, function( req, res, next ){
-    // res.send( "You are trying to delete something" );
-    Campground.findById( req.params.id, function( err, campground ){
-        Comment.remove({
-            "_id": {
-                $in: campground.comments
-            }
-        }, function( err ){
-            if( err ) {
-                res.redirect( "/campgrounds" );
-            } else {
-                campground.remove();
-                res.redirect( "/campgrounds" );
-            }
-        });
+    Campground.findById( req.params.id, async function( err, campground ){
+        if( err ){
+            req.flash( "error", err.message );
+            return res.redirect( "back" );
+        }
+        try {
+            await cloudinary.v2.uploader.destroy( campground.image_id );
+            campground.remove();
+                // Comment.remove( { "_id": { $in: campground.comments } } {
+                Comment.deleteMany( { _id: { $in: campground.comments } }, function( err ){
+                if( err ){
+                    console.log( err );
+                }
+            });
+            req.flash( "success", "Campground deleted successfully." );
+            res.redirect( "/campgrounds" );
+        } catch( err ) {
+            req.flash( "error", err.message );
+            return res.redirect( "back" );
+        }
     });
 });
 
