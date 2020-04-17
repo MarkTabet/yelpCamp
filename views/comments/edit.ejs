@@ -1,15 +1,16 @@
 
 <%- include("../partials/header") %>
 
+<img style="display: block; margin: auto; width: 40%" src="<%= campground.image %>" style="height: 400px">
 
     <div class="row">
 
-        <img style="display: block; margin: auto; width: 40%" src="<%= campground.image %>" style="height: 400px">
+        <div class="col-md-12 text-center mt-4">
+            <h1 style="text-align: center">Edit comment</h1>
+        </div>
 
-        <h1 style="text-align: center">Edit comment to <%= campground.name %></h1>
-
-        <div style="width: 30%; margin: 30px auto">
-            <form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT " method="post">
+        <div class="col-md-12">
+            <form class="form-signin" action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT " method="post">
                 <div class="form-group">
                     <input class="form-control" type="text" name="comment[text]" value="<%= comment.text %>">
                 </div>
@@ -17,11 +18,9 @@
                     <button class="btn btn-large btn-primary btn-block">Submit</button>
                 </div>
             </form>
-            
-            <br>
-            <a href="/campgrounds/<%= campground_id %>">Go Back</a>
-            <br>
-            <br>
+            <div class="form-signin">
+                <a href="/campgrounds/<%= campground_id %>">Go Back</a>
+            </div>
         </div>
     </div>
 
