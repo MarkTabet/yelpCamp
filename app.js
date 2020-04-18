@@ -1,6 +1,7 @@
 
 console.log( "Connected!" );
 
+
 require('dotenv').config();
 
 var express  = require( "express" );
@@ -24,10 +25,35 @@ app.use( bodyParser.urlencoded( {
 } ) );
 
 var mongoose = require( "mongoose" );
-mongoose.connect( "mongodb://localhost:27017/yelp_camp", {
+
+// connection for local mongoDB database
+// mongoose.connect( "mongodb://localhost:27017/yelp_camp", {
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true
+// });
+
+mongoose.connect( "mongodb+srv://mongodbAdmin:" + process.env.MONGO_DB_KEY + "@cluster0-eoozf.mongodb.net/test?retryWrites=true&w=majority", {
     useNewUrlParser: true,
+    useCreateIndex: true,
     useUnifiedTopology: true
-} );
+}).then( () => {
+    console.log( "Connected to DB" );
+}).catch( err => {
+    console.log( "Error: ", err.message );
+});
+
+const PostSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+ });
+ 
+ const Post = mongoose.model( "Post", PostSchema );
+
+//  app.get('/', async (req, res) => {
+// 	let post = await Post.create({ title: 'Test', description: 'This is a test also' });
+// 	res.send(post);
+// });
+ 
 
 var db = mongoose.connection;
 db.on( 'error', console.error.bind( console, 'connection error:' ) );
@@ -79,5 +105,10 @@ app.use( "/campgrounds/:id/comments", commentRoutes );
 // app.listen( port, () => console.log( `App listening on port ${port}!` ) );
 // app.listen( process.env.PORT, process.env.IP ); 
 
-app.listen( process.env.PORT || port, process.env.IP ); 
+// try this: 
+app.listen( process.env.PORT || 3000, function(){
+    console.log( "server is listening" );
+});
+
+// app.listen( process.env.PORT || port, process.env.IP ); 
 
