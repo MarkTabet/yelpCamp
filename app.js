@@ -76,4 +76,8 @@ app.use( "/campgrounds", campgroundRoutes );
 app.use( "/campgrounds/:id/comments", commentRoutes );
 
 
-app.listen( port, () => console.log( `App listening on port ${port}!` ) );
+// app.listen( port, () => console.log( `App listening on port ${port}!` ) );
+// app.listen( process.env.PORT, process.env.IP ); 
+
+app.listen( process.env.PORT || port, process.env.IP ); 
+
