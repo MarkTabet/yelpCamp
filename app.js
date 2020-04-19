@@ -33,7 +33,8 @@ var mongoose = require( "mongoose" );
 // });
 
 // var url = process.env.DATABASE_URL || "mongodb://localhost:27017/yelp_camp" // backup in case we lose DATABASE_URL
-var url = process.env.DATABASE_URL || "mongodb+srv://mongodbAdmin:" + process.env.MONGO_DB_KEY + "@cluster0-eoozf.mongodb.net/test?retryWrites=true&w=majority" // backup in case we lose DATABASE_URL
+//var url = process.env.DATABASE_URL || "mongodb+srv://mongodbAdmin:" + process.env.MONGO_DB_KEY + "@cluster0-eoozf.mongodb.net/test?retryWrites=true&w=majority" // backup in case we lose DATABASE_URL
+var url = process.env.DATABASE_URL_2 || "mongodb+srv://username:InLSSZzxXuBJkRIZ@cluster0-eoozf.mongodb.net/test?retryWrites=true&w=majority" // backup in case we lose DATABASE_URL
 mongoose.connect( url, {
     useNewUrlParser: true,
     useCreateIndex: true,
