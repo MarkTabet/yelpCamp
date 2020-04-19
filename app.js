@@ -2,7 +2,7 @@
 console.log( "Connected!" );
 
 
-require('dotenv').config();
+require( "dotenv" ).config();
 
 var express  = require( "express" );
 var flash    = require( "connect-flash" );
@@ -16,7 +16,7 @@ var commentRoutes    = require( "./routes/comments" );
 var indexRoutes      = require( "./routes/index" );
 
 var app = express();
-var port = 3000;
+var port = process.env.PORT || 3000;
 app.use( express.static( __dirname + "/public" ) );
 
 var bodyParser = require( "body-parser" );
@@ -32,7 +32,9 @@ var mongoose = require( "mongoose" );
     // useUnifiedTopology: true
 // });
 
-mongoose.connect( "mongodb+srv://mongodbAdmin:" + process.env.MONGO_DB_KEY + "@cluster0-eoozf.mongodb.net/test?retryWrites=true&w=majority", {
+// var url = process.env.DATABASE_URL || "mongodb://localhost:27017/yelp_camp" // backup in case we lose DATABASE_URL
+var url = process.env.DATABASE_URL || "mongodb+srv://mongodbAdmin:" + process.env.MONGO_DB_KEY + "@cluster0-eoozf.mongodb.net/test?retryWrites=true&w=majority" // backup in case we lose DATABASE_URL
+mongoose.connect( url, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -41,6 +43,8 @@ mongoose.connect( "mongodb+srv://mongodbAdmin:" + process.env.MONGO_DB_KEY + "@c
 }).catch( err => {
     console.log( "Error: ", err.message );
 });
+
+console.log( url );
 
 const PostSchema = new mongoose.Schema({
     title: String,
@@ -106,8 +110,8 @@ app.use( "/campgrounds/:id/comments", commentRoutes );
 // app.listen( process.env.PORT, process.env.IP ); 
 
 // try this: 
-app.listen( process.env.PORT || 3000, function(){
-    console.log( "server is listening" );
+app.listen( port, function(){
+    console.log( "Server is listening at port " + port );
 });
 
 // app.listen( process.env.PORT || port, process.env.IP ); 
