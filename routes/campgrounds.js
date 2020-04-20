@@ -198,13 +198,14 @@ router.delete( "/:id", middleware.checkCampgroundOwnership, function( req, res, 
         }
         try {
             await cloudinary.v2.uploader.destroy( campground.image_id );
-            campground.remove();
-                // Comment.remove( { "_id": { $in: campground.comments } } {
-                Comment.deleteMany( { _id: { $in: campground.comments } }, function( err ){
+
+            Comment.remove( { _id: { $in: campground.comments } }, function( err ){
                 if( err ){
                     console.log( err );
                 }
             });
+            campground.remove();
+                
             req.flash( "success", "Campground deleted successfully." );
             res.redirect( "/campgrounds" );
         } catch( err ) {
